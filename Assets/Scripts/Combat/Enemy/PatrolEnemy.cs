@@ -112,13 +112,15 @@ public class PatrolEnemy : BaseEnemy
         yield return new WaitForSeconds(Stats[StatType.AttackSpeed]);
         _canAttack = true;
     }
-    private void Die()
+    private void Die(DamageContext context)
     {
         _agent.ResetPath();
 
         SoundManager.Instance.PlaySound(_deathSoundName);
 
         StopAllCoroutines();
+
+        var killerSkills = context.Source.GetComponent<IHaveSkills>();
 
         _spawner.OnEnemyDied(this);
     }

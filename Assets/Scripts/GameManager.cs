@@ -44,7 +44,6 @@ public static class GameManager
     }
     private static void ToggleCursorVisibility(bool isVisible)
     {
-        Debug.Log($"[GameManager] isVisible = {isVisible}");
         if (isVisible)
         {
             Cursor.lockState = CursorLockMode.None;
@@ -52,9 +51,7 @@ public static class GameManager
         }
         else
         {
-            Debug.Log($"[GameManager] cursor locked");
             Cursor.lockState = CursorLockMode.Locked;
-            Debug.Log($"[GameManager] cursor state: {Cursor.lockState}");
         }
     }
 }

@@ -22,7 +22,7 @@ public class EntityDrops : MonoBehaviour
     {
         health.OnDied -= DropItems;
     }
-    public void DropItems()
+    public void DropItems(DamageContext context)
     {
         foreach (var entry in dropTable)
         {

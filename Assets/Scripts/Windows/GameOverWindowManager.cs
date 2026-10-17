@@ -38,7 +38,7 @@ public class GameOverWindowManager : MonoBehaviour
         _gameOverPanel.SetActive(false);
     }
 
-    private void PlayerDeathHandler()
+    private void PlayerDeathHandler(DamageContext context)
     {
         SoundManager.Instance.PlaySound(_defeatSoundName);
         _isMenuOpen = true;

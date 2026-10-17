@@ -6,10 +6,11 @@ public class Equipment : SimpleItem, IEquipment
     private EquipmentSO _equipmentData;
 
     private Dictionary<StatType, float> _stats;
+    public Dictionary<StatType, float> Stats => _stats;
     private bool _isEquipped;
     public bool IsEquipped => _isEquipped;
-    public Dictionary<StatType, float> Stats => _stats;
     public EquipmentSlot Slot => _equipmentData.Slot;
+    public EquipmentSO Data => _equipmentData;
     public new ItemType Type => ItemType.Equipment;
     public Equipment(EquipmentSO equipmentSO) : base(equipmentSO)
     {
@@ -23,7 +24,7 @@ public class Equipment : SimpleItem, IEquipment
             { StatType.Health, equipmentSO.Health },
             { StatType.Durability, equipmentSO.Durability },
             { StatType.Regeneration, equipmentSO.Regenerate }
-        }; 
+        };
     }
 
     public void Equip()

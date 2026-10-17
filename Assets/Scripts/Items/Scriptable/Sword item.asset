@@ -24,3 +24,7 @@ MonoBehaviour:
   _regenerate: 0
   _durability: 100
   _slot: 1
+  _heldPrefab: {fileID: 919132149155446097, guid: 4a0a94ed3f7623e4c846e413b8ae398c, type: 3}
+  _heldPosition: {x: 0, y: 0, z: 0}
+  _heldEulerAngles: {x: 0, y: 0, z: 0}
+  _heldScale: {x: 1, y: 1, z: 1}

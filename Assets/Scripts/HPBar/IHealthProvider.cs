@@ -10,7 +10,7 @@ public interface IHealthProvider
     public event Action<HealEventArgs> OnHealed;
     public event Action<float, float> OnMaxHealthChanged;
     public event Action<float, float> OnRevived;
-    public event Action OnDied;
+    public event Action<DamageContext> OnDied;
 
     public void Revival(float amount);
 }

@@ -6,6 +6,7 @@ public class HealthComponent : MonoBehaviour, IDamageable, IHealable, IHealthPro
 {
     [SerializeField] private float _maxHP = 50f;
     private float _currentHP;
+    private IDamageFilter _filter;
 
     public float CurrentHP => _currentHP;
     public float MaxHP { 
@@ -22,16 +23,19 @@ public class HealthComponent : MonoBehaviour, IDamageable, IHealable, IHealthPro
     public event Action<HealEventArgs> OnHealed;
     public event Action<float, float> OnMaxHealthChanged;
     public event Action<float, float> OnRevived;
-    public event Action OnDied;
+    public event Action<DamageContext> OnDied;
 
     private void Awake()
     {
         _currentHP = _maxHP;
+        _filter = GetComponent<IDamageFilter>();
     }
 
     public void TakeDamage(DamageContext context)
     {
         if (!IsAlive) return;
+        if (_filter != null && !_filter.CanTakeDamage(context)) return;
+
         float takenDamage = context.BaseAmount;
         if (context.Target.TryGetComponent<IHaveStats>(out IHaveStats targetStats))
         {
@@ -48,7 +52,7 @@ public class HealthComponent : MonoBehaviour, IDamageable, IHealable, IHealthPro
 
         if (_currentHP <= 0f)
         {
-            OnDied?.Invoke();
+            OnDied?.Invoke(context);
         }
     }
 

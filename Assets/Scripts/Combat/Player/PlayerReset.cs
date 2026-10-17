@@ -34,6 +34,7 @@ public class PlayerReset : MonoBehaviour
             _playerStats.SetStatType(stat.Key, stat.Value);
         }
         _inventory.ClearInventory();
+        if (TryGetComponent<PlayerEquipmentVisuals>(out var visuals)) visuals.ClearAll();
 
         _healthProvider.Revival(_statsDict[StatType.Health]);
     }

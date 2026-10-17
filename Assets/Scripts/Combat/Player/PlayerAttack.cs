@@ -16,6 +16,8 @@ public class PlayerAttack : MonoBehaviour
     private SpriteRenderer _damageSprite;
     private float _showDamageAreaTime = 0.5f;
 
+    private Animator _animator;
+
     private void Awake()
     {
         _input = new PlayerInputs();
@@ -23,6 +25,8 @@ public class PlayerAttack : MonoBehaviour
 
         _damageSprite = _damageArea.GetComponent<SpriteRenderer>();
         _damageSprite.color = new Color(1, 0, 0, 0);
+
+        _animator = GetComponentInChildren<Animator>();
 
         GameManager.OnGamePaused += GameStateChanged;
         GameManager.OnInventoryUpdate += GameStateChanged;
@@ -49,6 +53,8 @@ public class PlayerAttack : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(ShowDamageArea());
 
+        _animator.SetTrigger("StartAttack");
+
         SoundManager.Instance.PlaySound(_soundName);
 
         int hitCount = Physics.OverlapSphereNonAlloc(
@@ -56,6 +62,7 @@ public class PlayerAttack : MonoBehaviour
             _stats[StatType.AttackRange],
             _hitBuffer
         );
+        DamageType damageType = _inventory.Equipments[EquipmentSlot.RightArm]?.Data.DamageType ?? DamageType.Physical;
 
         for (int i = 0; i < hitCount; i++)
         {
@@ -64,7 +71,7 @@ public class PlayerAttack : MonoBehaviour
             if (_hitBuffer[i].TryGetComponent<IDamageable>(out var damageable))
             {
                 float finalDamage = _stats[StatType.Attack];
-                damageable.TakeDamage(new DamageContext(gameObject, finalDamage, _hitBuffer[i].transform));
+                damageable.TakeDamage(new DamageContext(gameObject, finalDamage, _hitBuffer[i].transform, damageType));
             }
         }
     }

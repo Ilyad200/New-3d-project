@@ -30,7 +30,7 @@ public class Dummy : MonoBehaviour, ICombatSource
         health.OnDied -= Die;
     }
 
-    private void Die()
+    private void Die(DamageContext context)
     {
         healable.Heal(new HealContext(gameObject, healable.MaxHP));
     }
