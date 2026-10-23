@@ -6,7 +6,9 @@ public interface ICombatSource
 {
     GameObject Owner { get; }
     Faction Faction { get; }
-    int Level { get; }
+    IHealthProvider HealthProvider { get; set; }
+    IHaveStats Stats { get; }
+
     //bool IsValid { get; }
 
     //// Базовые модификаторы (могут быть переопределены в наследниках)

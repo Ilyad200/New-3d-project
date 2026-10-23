@@ -71,7 +71,7 @@ public class PlayerAttack : MonoBehaviour
             if (_hitBuffer[i].TryGetComponent<IDamageable>(out var damageable))
             {
                 float finalDamage = _stats[StatType.Attack];
-                damageable.TakeDamage(new DamageContext(gameObject, finalDamage, _hitBuffer[i].transform, damageType));
+                damageable.TakeDamage(new DamageContext(gameObject, finalDamage, _hitBuffer[i].gameObject, damageType));
             }
         }
     }
