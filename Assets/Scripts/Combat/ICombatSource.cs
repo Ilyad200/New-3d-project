@@ -4,9 +4,8 @@ public enum Faction { Player, Enemy, Neutral, Ally, Environment }
 
 public interface ICombatSource
 {
-    GameObject Owner { get; }
     Faction Faction { get; }
-    IHealthProvider HealthProvider { get; set; }
+    IHealthProvider HealthProvider { get; }
     IHaveStats Stats { get; }
 
     //bool IsValid { get; }

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Dummy : MonoBehaviour, ICombatSource
+public class Dummy : MonoBehaviour
 {
     public GameObject Owner { get; }
     public Faction Faction { get; }

@@ -1,11 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerStats : MonoBehaviour, IHaveStats
+public class EntityStats : MonoBehaviour, IHaveStats
 {
     [SerializeField] private Stats _stats;
-    private Dictionary<StatType, float> _statsDict;
-    public Dictionary<StatType, float> Stats { get => _statsDict; }
+    public Dictionary<StatType, float> Stats { get; private set; }
 
     private IHealthProvider _healthProvider;
     private Regenerate _regenerate;
@@ -15,7 +14,7 @@ public class PlayerStats : MonoBehaviour, IHaveStats
         _healthProvider = GetComponent<IHealthProvider>();
         _regenerate = GetComponent<Regenerate>();
 
-        _statsDict = new Dictionary<StatType, float>() { 
+        Stats = new Dictionary<StatType, float>() { 
             { StatType.Attack, _stats.Attack },
             { StatType.Defense, _stats.Defense },
             { StatType.Speed, _stats.Speed },
@@ -32,7 +31,7 @@ public class PlayerStats : MonoBehaviour, IHaveStats
     }
     public void SetStatType(StatType type, float amount)
     {
-        _statsDict[type] = amount;
+        Stats[type] = amount;
         if (type == StatType.Health) _healthProvider.MaxHP = amount;
         if (type == StatType.Regeneration)
         {

@@ -34,7 +34,7 @@ public class PatrolEnemy : BaseEnemy
     }
     private void OnDisable()
     {
-        _healthProvider.OnDied -= Die;
+        HealthProvider.OnDied -= Die;
         if (_patrolRoutine != null) StopCoroutine(_patrolRoutine);
     }
     public override void Revive(Spawner spawner)
@@ -43,9 +43,9 @@ public class PatrolEnemy : BaseEnemy
 
         _target = null;
         _currentState = EnemyState.Patrol;
-        _healthProvider.OnDied += Die;
+        HealthProvider.OnDied += Die;
 
-        _trigger.Collider.radius = Stats[StatType.DetectionRange];
+        _trigger.Collider.radius = Stats.Stats[StatType.DetectionRange];
     }
 
     private void FixedUpdate()
@@ -60,7 +60,7 @@ public class PatrolEnemy : BaseEnemy
                 _agent.SetDestination(_nextPatrolPoint);
                 break;
             case EnemyState.Chase:
-                if (Vector3.Distance(transform.position, _target.position) <= Stats[StatType.AttackRange])
+                if (Vector3.Distance(transform.position, _target.position) <= Stats.Stats[StatType.AttackRange])
                 {
                     _agent.ResetPath();
                     Attack();
@@ -103,13 +103,13 @@ public class PatrolEnemy : BaseEnemy
 
         _canAttack = false;
         var health = _target.GetComponent<IDamageable>();
-        health?.TakeDamage(new DamageContext(gameObject, Stats[StatType.Attack], _target));
+        health?.TakeDamage(new DamageContext(gameObject, Stats.Stats[StatType.Attack], _target));
 
         StartCoroutine(AttckReload());
     }
     private IEnumerator AttckReload()
     {
-        yield return new WaitForSeconds(Stats[StatType.AttackSpeed]);
+        yield return new WaitForSeconds(Stats.Stats[StatType.AttackSpeed]);
         _canAttack = true;
     }
     private void Die(DamageContext context)
@@ -136,7 +136,7 @@ public class PatrolEnemy : BaseEnemy
         if (_spawner == null) return;
 
         Gizmos.color = Color.orange;
-        Gizmos.DrawWireSphere(transform.position, Stats[StatType.DetectionRange]);
+        Gizmos.DrawWireSphere(transform.position, Stats.Stats[StatType.DetectionRange]);
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(_spawner.transform.position, _patrolRadius);
