@@ -6,9 +6,9 @@ public class HealContext
     public HealType Type { get; private set; }
     public float BaseAmount { get; private set; }
     public bool IsCritical { get; private set; }
-    public DamageModifiers Modifiers { get; private set; }
+    public DamageModifier Modifiers { get; private set; }
 
-    public HealContext(GameObject source, float amount, HealType type = HealType.Instant, bool isCrit = false, DamageModifiers? modifiers = null)
+    public HealContext(GameObject source, float amount, HealType type = HealType.Instant, bool isCrit = false, DamageModifier? modifiers = null)
     {
         Source = source;
         Type = type;

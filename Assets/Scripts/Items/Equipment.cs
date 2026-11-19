@@ -31,26 +31,22 @@ public class Equipment : SimpleItem, IEquipment
     {
         _isEquipped = true;
 
-        var playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerStats>();
+        var playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<EntityStats>();
         foreach (var stat in _stats)
         {
-            if (playerStats.Stats.TryGetValue(stat.Key, out var value))
-            {
-                playerStats.SetStatType(stat.Key, value + stat.Value);
-            }
+            var value = playerStats.Get(stat.Key);
+            playerStats.SetStatType(stat.Key, value + stat.Value);
         }
     }
     public void Unequip()
     {
         _isEquipped = false;
 
-        var playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerStats>();
+        var playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<EntityStats>();
         foreach (var stat in _stats)
         {
-            if (playerStats.Stats.TryGetValue(stat.Key, out var value))
-            {
-                playerStats.SetStatType(stat.Key, value - stat.Value);
-            }
+            var value = playerStats.Get(stat.Key);
+            playerStats.SetStatType(stat.Key, value - stat.Value);
         }
     }
 }

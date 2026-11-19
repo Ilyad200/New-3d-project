@@ -12,11 +12,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: da15e7421d3b6324ca6f5e972d9e6ff2, type: 3}
   m_Name: EnemyStats
   m_EditorClassIdentifier: Assembly-CSharp::EnemyStats
-  HP: 50
-  Attack: 10
-  Defense: 0
-  Speed: 2
-  AttackRange: 2.5
-  AttackSpeed: 2
-  Regeneration: 0
+  StatList:
+  - Type: 0
+    Value: 10
+  - Type: 1
+    Value: 0
+  - Type: 2
+    Value: 3
+  - Type: 3
+    Value: 50
+  - Type: 4
+    Value: 2
+  - Type: 5
+    Value: 1
+  - Type: 6
+    Value: 0
+  - Type: 7
+    Value: 7.5
+  - Type: 8
+    Value: 0
+  Resistances: []
+  Penetrations: []
   DetectionRange: 7.5

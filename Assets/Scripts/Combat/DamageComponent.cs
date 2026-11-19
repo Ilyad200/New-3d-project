@@ -6,12 +6,12 @@ public class DamageComponent
     public float Amount { get; private set; }
     public DamageType Type { get; private set; }
     public bool IsCritical { get; private set; }
-    public DamageModifiers Modifiers { get; private set; }
+    public DamageModifier Modifiers { get; private set; }
 
     // Тег для специфической фильтрации (например, "DoT", "AoE")
     public DamageTags[] DamageTags { get; private set; }
 
-    public DamageComponent(GameObject source, float amount, DamageType type, bool isCrit = false, DamageModifiers? modifiers = null, DamageTags[] damageTags = null)
+    public DamageComponent(GameObject source, float amount, DamageType type, bool isCrit = false, DamageModifier? modifiers = null, DamageTags[] damageTags = null)
     {
         Source = source;
         Amount = amount;

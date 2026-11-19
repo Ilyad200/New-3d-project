@@ -18,7 +18,7 @@ public class PlayerMove : MonoBehaviour
     private bool _isMoving;
     private Animator _animator;
 
-    private Dictionary<StatType, float> _stats;
+    private IHaveStats _stats;
 
     private void Awake()
     {
@@ -47,7 +47,7 @@ public class PlayerMove : MonoBehaviour
         {
             _camera = Camera.main;
         }
-        _stats = GetComponent<PlayerStats>().Stats;
+        _stats = GetComponent<EntityStats>();
     }
 
     void Update()
@@ -60,7 +60,7 @@ public class PlayerMove : MonoBehaviour
 
         if (_moveVector.magnitude > 0.1f)
         {
-            _controller.Move(_moveVector * ((_stats != null ? _stats[StatType.Speed] : 5f) * Time.deltaTime));
+            _controller.Move(_moveVector * ((_stats != null ? _stats.Get(StatType.Speed) : 5f) * Time.deltaTime));
             Quaternion targetRot = Quaternion.LookRotation(_moveVector);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * _rotationSpeed);
         }

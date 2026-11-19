@@ -3,15 +3,15 @@ using UnityEngine;
 
 public class PlayerReset : MonoBehaviour
 {
-    [SerializeField] private Stats _stats;
+    public Stats Stats { get; set; }
+
     private IHealthProvider _healthProvider;
-    private PlayerStats _playerStats;
+    private IHaveStats _playerStats;
     private Inventory _inventory;
-    private Dictionary<StatType, float> _statsDict;
 
     private void Start()
     {
-        _playerStats = GetComponent<PlayerStats>();
+        _playerStats = GetComponent<IHaveStats>();
         _healthProvider = GetComponent<IHealthProvider>();
         _inventory = GetComponentInChildren<Inventory>();
     }
@@ -19,23 +19,23 @@ public class PlayerReset : MonoBehaviour
     {
         transform.position = new Vector3(0, 1, 0);
 
-        _statsDict = new Dictionary<StatType, float>() {
-            { StatType.Attack, _stats.Attack },
-            { StatType.Defense, _stats.Defense },
-            { StatType.Speed, _stats.Speed },
-            { StatType.Health, _stats.HP },
-            { StatType.AttackRange, _stats.AttackRange },
-            { StatType.AttackSpeed, _stats.AttackSpeed },
-            { StatType.Regeneration, _stats.Regeneration },
-        };
-
-        foreach (var stat in _statsDict)
+        //_statsDict = new Dictionary<StatType, float>() {
+        //    { StatType.Attack, _stats.Attack },
+        //    { StatType.Defense, _stats.Defense },
+        //    { StatType.Speed, _stats.Speed },
+        //    { StatType.Health, _stats.HP },
+        //    { StatType.AttackRange, _stats.AttackRange },
+        //    { StatType.AttackSpeed, _stats.AttackSpeed },
+        //    { StatType.Regeneration, _stats.Regeneration },
+        //};
+        foreach (var s in Stats.StatList)
         {
-            _playerStats.SetStatType(stat.Key, stat.Value);
+            _playerStats.SetStatType(s.Type, s.Value);
         }
+
         _inventory.ClearInventory();
         if (TryGetComponent<PlayerEquipmentVisuals>(out var visuals)) visuals.ClearAll();
 
-        _healthProvider.Revival(_statsDict[StatType.Health]);
+        _healthProvider.Revival(_playerStats.Get(StatType.Health));
     }
 }

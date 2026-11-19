@@ -8,8 +8,7 @@ public enum DamageType
     Lightning,
     Poison,
     Magic,
-    True,      // Игнорирует броню и резисты
-    Axe, Pickaxe, Shovel // Интсрументы
+    True      // Игнорирует броню и резисты
 }
 
 public static class DamageTypeExtensions

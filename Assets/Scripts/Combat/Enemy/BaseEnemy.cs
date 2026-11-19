@@ -25,9 +25,9 @@ public abstract class BaseEnemy : MonoBehaviour, ICombatSource
     public virtual void Revive(Spawner spawner)
     {
         _spawner = spawner;
-        _agent.speed = Stats.Stats[StatType.Speed];
-        HealthProvider.MaxHP = Stats.Stats[StatType.Health];
-        HealthProvider.Revival(Stats.Stats[StatType.Health]);
+        _agent.speed = Stats.Get(StatType.Speed);
+        HealthProvider.MaxHP = Stats.Get(StatType.Health);
+        HealthProvider.Revival(Stats.Get(StatType.Health));
 
         _canAttack = true;
     }

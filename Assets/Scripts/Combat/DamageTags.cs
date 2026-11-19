@@ -9,5 +9,8 @@ public enum DamageTags
     Ranged,
     CanTriggerOnHit,
     CanApplyStatus,
-    LifestealEligible
+    LifestealEligible,
+    Resource_PickAxe,
+    Resource_Axe,
+    Resource_Shovel,
 }

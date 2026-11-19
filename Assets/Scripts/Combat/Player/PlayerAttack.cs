@@ -5,10 +5,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerAttack : MonoBehaviour
 {
-    private Dictionary<StatType, float> _stats;
+    private IHaveStats _stats;
 
     private PlayerInputs _input;
     private Collider[] _hitBuffer;   // Кэш для OverlapSphereNonAlloc
+    private readonly HashSet<IDamageable> _processed = new HashSet<IDamageable>();
 
     [SerializeField] private Inventory _inventory;
     [SerializeField] private string _soundName;
@@ -34,8 +35,8 @@ public class PlayerAttack : MonoBehaviour
     }
     private void Start()
     {
-        _stats = GetComponent<PlayerStats>().Stats;
-        _damageArea.transform.localScale = _stats[StatType.AttackRange] * 2 * Vector3.one;
+        _stats = GetComponent<IHaveStats>();
+        _damageArea.transform.localScale = _stats.Get(StatType.AttackRange) * 2 * Vector3.one;
     }
     private void OnEnable()
     {
@@ -59,19 +60,30 @@ public class PlayerAttack : MonoBehaviour
 
         int hitCount = Physics.OverlapSphereNonAlloc(
             transform.position,
-            _stats[StatType.AttackRange],
-            _hitBuffer
+            _stats.Get(StatType.AttackRange),
+            _hitBuffer,
+            ~0,
+            QueryTriggerInteraction.Ignore
         );
-        DamageType damageType = _inventory.Equipments[EquipmentSlot.RightArm]?.Data.DamageType ?? DamageType.Physical;
 
+        _processed.Clear();
+
+        Debug.Log($"[PlayerAttack] attack start");
+        Debug.Log($"[PlayerAttack] hit count {hitCount}");
         for (int i = 0; i < hitCount; i++)
         {
-            if (_hitBuffer[i].transform == transform) continue;
+            Collider col = _hitBuffer[i];
+            if (col.transform.IsChildOf(transform)) continue;
 
-            if (_hitBuffer[i].TryGetComponent<IDamageable>(out var damageable))
+            if (col.TryGetComponent<IDamageable>(out var damageable))
             {
-                float finalDamage = _stats[StatType.Attack];
-                damageable.TakeDamage(new DamageContext(gameObject, finalDamage, _hitBuffer[i].gameObject, damageType));
+                if (!_processed.Add(damageable)) continue; // уже обработали этого получателя
+
+                DamageContext context = new DamageContext(gameObject, col.gameObject);
+                DamageType damageType = _inventory.Equipments[EquipmentSlot.RightArm]?.Data.DamageType ?? DamageType.Physical;
+                context.AddComponent(gameObject, _inventory.Equipments[EquipmentSlot.RightArm]?.Stats[StatType.Attack] ?? _stats.Get(StatType.Attack), damageType);
+                damageable.TakeDamage(context);
+                Debug.Log($"[PlayerAttack] attack {i}. {col.GetEntityId()}");
             }
         }
     }
@@ -109,5 +121,11 @@ public class PlayerAttack : MonoBehaviour
         GameManager.OnGamePaused -= GameStateChanged;
         GameManager.OnInventoryUpdate -= GameStateChanged;
         GameManager.OnPlayerLiveStatusUpdate -= GameStateChanged;
+    }
+    private void OnDrawGizmos()
+    {
+
+        Gizmos.color = Color.orange;
+        Gizmos.DrawWireSphere(transform.position, _stats.Get(StatType.AttackRange));
     }
 }
