@@ -7,11 +7,12 @@ using UnityEngine;
 
 namespace Assets.Scripts.Combat
 {
-    class CombatEntity : MonoBehaviour, ICombatSource
+    public class CombatEntity : MonoBehaviour, ICombatSource, IDamageable, IHealable
     {
         public IHealthProvider HealthProvider { get; private set; }
         public Faction Faction { get; private set; }
         public IHaveStats Stats { get; private set; }
+        public CombatProfile Profile { get; private set; }
 
         private void Awake()
         {
@@ -19,6 +20,16 @@ namespace Assets.Scripts.Combat
             Stats = GetComponent<IHaveStats>();
         }
         public void TakeDamage(DamageContext context)
+        {
+            float finalDamage = 0f;
+            foreach (var component in context.Components)
+            {
+                finalDamage += component.Amount;
+            }
+            HealthProvider.Reduce(finalDamage);
+        }
+
+        public void Heal(HealContext context)
         {
 
         }

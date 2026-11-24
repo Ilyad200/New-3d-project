@@ -7,6 +7,7 @@ public interface ICombatSource
     Faction Faction { get; }
     IHealthProvider HealthProvider { get; }
     IHaveStats Stats { get; }
+    CombatProfile Profile { get; }
 
     //bool IsValid { get; }
 

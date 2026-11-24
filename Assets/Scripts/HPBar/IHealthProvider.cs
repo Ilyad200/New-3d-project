@@ -12,5 +12,8 @@ public interface IHealthProvider
     public event Action<float, float> OnRevived;
     public event Action<DamageContext> OnDied;
 
+    void Restore(float value);
+    void Reduce(float value);
+
     public void Revival(float amount);
 }

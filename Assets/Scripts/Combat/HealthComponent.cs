@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HealthComponent : MonoBehaviour, IDamageable, IHealable, IHealthProvider
+public class HealthComponent : MonoBehaviour, IHealthProvider
 {
     [SerializeField] private float _maxHP = 50f;
     private float _currentHP;
-    private IDamageFilter _filter;
+
+    public event Action<float, float> OnHealthChanged; //currentHP, maxHP
 
     public float CurrentHP => _currentHP;
     public float MaxHP { 
@@ -28,7 +29,15 @@ public class HealthComponent : MonoBehaviour, IDamageable, IHealable, IHealthPro
     private void Awake()
     {
         _currentHP = _maxHP;
-        _filter = GetComponent<IDamageFilter>();
+    }
+
+    public void Restore(float value)
+    {
+        _currentHP = Math.Min(_maxHP, _currentHP + value);
+    }
+    public void Reduce(float value)
+    {
+        _currentHP = Math.Max(0, _currentHP - value);
     }
 
     public void TakeDamage(DamageContext context)
@@ -45,7 +54,7 @@ public class HealthComponent : MonoBehaviour, IDamageable, IHealable, IHealthPro
         Debug.Log($"[HealthComponent] {takenDamage}");
         if (context.Target.TryGetComponent<IHaveStats>(out IHaveStats targetStats))
         {
-            takenDamage = Mathf.Max(0, takenDamage - targetStats.Get(StatType.Defense));
+            takenDamage = Mathf.Max(0, takenDamage - targetStats.Get(StatType.Resistance));
         }
 
         _currentHP = Mathf.Max(_currentHP - takenDamage, 0f);

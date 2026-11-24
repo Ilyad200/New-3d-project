@@ -1,3 +1,4 @@
+using Assets.Scripts.Combat;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,8 +19,8 @@ public class Equipment : SimpleItem, IEquipment
         _isEquipped = false;
         _stats = new Dictionary<StatType, float>()
         {
-            { StatType.Attack, equipmentSO.Attack },
-            { StatType.Defense, equipmentSO.Defence },
+            { StatType.Damage, equipmentSO.Attack },
+            { StatType.Resistance, equipmentSO.Defence },
             { StatType.Speed, equipmentSO.Speed },
             { StatType.Health, equipmentSO.Health },
             { StatType.Durability, equipmentSO.Durability },
@@ -27,18 +28,21 @@ public class Equipment : SimpleItem, IEquipment
         };
     }
 
-    public void Equip()
+    public void Equip(ICombatSource owner)
     {
         _isEquipped = true;
 
+        //owner.Profile.SetSource(this, _equipmentData.modifiers);
+
         var playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<EntityStats>();
+
         foreach (var stat in _stats)
         {
             var value = playerStats.Get(stat.Key);
             playerStats.SetStatType(stat.Key, value + stat.Value);
         }
     }
-    public void Unequip()
+    public void Unequip(ICombatSource owner)
     {
         _isEquipped = false;
 

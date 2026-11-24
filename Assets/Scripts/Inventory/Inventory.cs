@@ -26,10 +26,16 @@ public class Inventory : MonoBehaviour
 
     public Dictionary<EquipmentSlot, IEquipment> Equipments => _equipments;
 
+    private ICombatSource _owner;
+
     private void Awake()
     {
         for (int i = 0; i < _capacity; i++)
             _slots.Add(new InventorySlot());
+    }
+    private void Start()
+    {
+        _owner = GetComponent<ICombatSource>();
     }
     private void OnEnable()
     {
@@ -87,15 +93,15 @@ public class Inventory : MonoBehaviour
     {
         if (_equipments.TryGetValue(equipment.Slot, out IEquipment curEquipment))
         {
-            curEquipment?.Unequip();
+            curEquipment?.Unequip(_owner);
         }
         _equipments[equipment.Slot] = equipment;
-        equipment.Equip();
+        equipment.Equip(_owner);
     }
     public void UnequipItem(IEquipment equipment)
     {
         _equipments[equipment.Slot] = null;
-        equipment.Unequip();
+        equipment.Unequip(_owner);
     }
     public int GetItemsCount(string id)
     {

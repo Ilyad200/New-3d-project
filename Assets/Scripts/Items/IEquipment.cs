@@ -8,6 +8,6 @@ public interface IEquipment : IItem
     public EquipmentSlot Slot { get; }
     public EquipmentSO Data { get; }
 
-    public void Equip();
-    public void Unequip();
+    public void Equip(ICombatSource owner);
+    public void Unequip(ICombatSource owner);
 }

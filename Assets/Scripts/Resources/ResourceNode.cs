@@ -6,7 +6,7 @@ using System.Linq;
 [RequireComponent(typeof(HealthComponent))]
 public class ResourceNode : MonoBehaviour, IDamageFilter
 {
-    [SerializeField] private DamageTags _requiredType = DamageTags.Resource;
+    [SerializeField] private DamageTags _requiredType = DamageTags.Resource_Pickaxe;
     [SerializeField] private float _respawnDelay;
 
     protected IHealthProvider _healthProvider;

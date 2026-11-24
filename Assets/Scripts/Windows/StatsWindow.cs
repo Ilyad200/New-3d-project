@@ -34,8 +34,8 @@ public class StatsWindow : MonoBehaviour
 
         if (_statsTexts == null || !_isWindowOpen) return;
 
-        _statsTexts[0].text = playerStats.Get(StatType.Attack).ToString();
-        _statsTexts[1].text = playerStats.Get(StatType.Defense).ToString();
+        _statsTexts[0].text = playerStats.Get(StatType.Damage).ToString();
+        _statsTexts[1].text = playerStats.Get(StatType.Resistance).ToString();
         _statsTexts[2].text = playerStats.Get(StatType.Health).ToString();
         _statsTexts[3].text = playerStats.Get(StatType.Speed).ToString();
         _statsTexts[4].text = playerStats.Get(StatType.Regeneration).ToString();

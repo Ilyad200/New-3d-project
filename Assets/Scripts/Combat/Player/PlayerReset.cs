@@ -30,7 +30,7 @@ public class PlayerReset : MonoBehaviour
         //};
         foreach (var s in Stats.StatList)
         {
-            _playerStats.SetStatType(s.Type, s.Value);
+            _playerStats.SetStatType(s.StatType, s.Value);
         }
 
         _inventory.ClearInventory();

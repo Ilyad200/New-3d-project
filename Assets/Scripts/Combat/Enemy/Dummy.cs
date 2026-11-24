@@ -32,7 +32,7 @@ public class Dummy : MonoBehaviour
 
     private void Die(DamageContext context)
     {
-        healable.Heal(new HealContext(gameObject, healable.MaxHP));
+        healable.Heal(new HealContext(gameObject, healable.HealthProvider.MaxHP));
     }
 
     public float GetFlatBonus(DamageType type) => 0f;

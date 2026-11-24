@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-public enum DamageTags
+public enum DamageTags2
 {
     CanCrit,
     CanBeBlocked,
@@ -10,7 +10,7 @@ public enum DamageTags
     CanTriggerOnHit,
     CanApplyStatus,
     LifestealEligible,
-    Resource_PickAxe,
+    Resource_Pickaxe,
     Resource_Axe,
     Resource_Shovel,
 }

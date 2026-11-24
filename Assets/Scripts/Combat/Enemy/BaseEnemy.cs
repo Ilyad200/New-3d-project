@@ -12,6 +12,7 @@ public abstract class BaseEnemy : MonoBehaviour, ICombatSource
     public IHealthProvider HealthProvider { get; protected set; }
     public IHaveStats Stats { get; protected set; }
     public Faction Faction { get; } = Faction.Enemy;
+    public CombatProfile Profile { get; }
 
     protected Spawner _spawner;
 

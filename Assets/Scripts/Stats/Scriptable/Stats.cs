@@ -24,7 +24,7 @@ public class Stats : ScriptableObject
 
         // убрать дубли и типы, которых больше нет в enum
         changed |= StatList.RemoveAll(s =>
-            !Enum.IsDefined(typeof(StatType), s.Type) || !seen.Add(s.Type)) > 0;
+            !Enum.IsDefined(typeof(StatType), s.StatType) || !seen.Add(s.StatType)) > 0;
 
         // добавить недостающие
         foreach (StatType type in Enum.GetValues(typeof(StatType)))
@@ -35,7 +35,7 @@ public class Stats : ScriptableObject
         }
 
         if (changed)
-            StatList.Sort((a, b) => ((int)a.Type).CompareTo((int)b.Type));
+            StatList.Sort((a, b) => ((int)a.StatType).CompareTo((int)b.StatType));
 
         return changed;
     }

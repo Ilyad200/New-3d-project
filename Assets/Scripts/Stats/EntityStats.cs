@@ -5,14 +5,18 @@ using UnityEngine;
 [System.Serializable]
 public class Stat
 {
-    public StatType Type;
+    public StatType StatType;
+    public DamageType DamageType;
+    public ModOp Op;
     public float Value;
 
     public Stat(StatType type, float value = 0f)
     {
-        Type = type;
+        StatType = type;
         Value = value;
     }
+    public bool IsTyped() =>
+        StatType is StatType.Damage or StatType.Resistance or StatType.Penetration;
 }
 
 public class EntityStats : MonoBehaviour, IHaveStats
@@ -42,7 +46,7 @@ public class EntityStats : MonoBehaviour, IHaveStats
         //};
         foreach (var s in _stats.StatList)
         {
-            _statsDictionary.Add(s.Type, s.Value);
+            _statsDictionary.Add(s.StatType, s.Value);
         }
         Resistances = _stats.Resistances;
         Penetrations = _stats.Penetrations;

@@ -81,7 +81,7 @@ public class PlayerAttack : MonoBehaviour
 
                 DamageContext context = new DamageContext(gameObject, col.gameObject);
                 DamageType damageType = _inventory.Equipments[EquipmentSlot.RightArm]?.Data.DamageType ?? DamageType.Physical;
-                context.AddComponent(gameObject, _inventory.Equipments[EquipmentSlot.RightArm]?.Stats[StatType.Attack] ?? _stats.Get(StatType.Attack), damageType);
+                context.AddComponent(gameObject, _inventory.Equipments[EquipmentSlot.RightArm]?.Stats[StatType.Damage] ?? _stats.Get(StatType.Damage), damageType);
                 damageable.TakeDamage(context);
                 Debug.Log($"[PlayerAttack] attack {i}. {col.GetEntityId()}");
             }
