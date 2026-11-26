@@ -17,10 +17,23 @@ MonoBehaviour:
   _description: 
   _icon: {fileID: 21300000, guid: 2f1eaeeaad36ee5469eff7ff158f37ba, type: 3}
   _isStackable: 0
-  _attack: 0
-  _defence: 2
-  _speed: 0
-  _health: 15
-  _regenerate: 1
-  _durability: 100
+  _stats:
+  - key:
+      StatType: 0
+      DamageType: 0
+    value: 5
+  - key:
+      StatType: 6
+      DamageType: 0
+    value: 2
+  - key:
+      StatType: 1
+      DamageType: 0
+    value: 30
   _slot: 2
+  _damageType: 0
+  _heldPrefab: {fileID: 0}
+  _heldPosition: {x: 0, y: 0, z: 0}
+  _heldEulerAngles: {x: 0, y: 0, z: 0}
+  _heldScale: {x: 1, y: 1, z: 1}
+  _attackOverride: {fileID: 0}

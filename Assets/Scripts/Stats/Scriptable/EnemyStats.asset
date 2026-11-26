@@ -9,14 +9,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da15e7421d3b6324ca6f5e972d9e6ff2, type: 3}
+  m_Script: {fileID: 11500000, guid: cf92ca437125cec44a3aa04fa88e60cc, type: 3}
   m_Name: EnemyStats
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyStats
-  HP: 50
-  Attack: 10
-  Defense: 0
-  Speed: 2
-  AttackRange: 2.5
-  AttackSpeed: 2
-  Regeneration: 0
-  DetectionRange: 7.5
+  m_EditorClassIdentifier: Assembly-CSharp::DamageStats
+  Stats:
+  - key:
+      StatType: 0
+      DamageType: 0
+    value: 10
+  - key:
+      StatType: 1
+      DamageType: 0
+    value: 50
+  - key:
+      StatType: 2
+      DamageType: 0
+    value: 3
+  - key:
+      StatType: 3
+      DamageType: 0
+    value: 3
+  - key:
+      StatType: 4
+      DamageType: 0
+    value: 1
+  - key:
+      StatType: 5
+      DamageType: 0
+    value: 7.5

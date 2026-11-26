@@ -5,10 +5,11 @@ using UnityEngine.InputSystem;
 
 public class PlayerAttack : MonoBehaviour
 {
-    private Dictionary<StatType, float> _stats;
+    private IHaveStats _stats;
 
     private PlayerInputs _input;
     private Collider[] _hitBuffer;   // Кэш для OverlapSphereNonAlloc
+    private readonly HashSet<IDamageable> _processed = new HashSet<IDamageable>();
 
     [SerializeField] private Inventory _inventory;
     [SerializeField] private string _soundName;
@@ -34,8 +35,8 @@ public class PlayerAttack : MonoBehaviour
     }
     private void Start()
     {
-        _stats = GetComponent<PlayerStats>().Stats;
-        _damageArea.transform.localScale = _stats[StatType.AttackRange] * 2 * Vector3.one;
+        _stats = GetComponent<IHaveStats>();
+        _damageArea.transform.localScale = _stats.GetStatValue(StatType.AttackRange) * 2 * Vector3.one;
     }
     private void OnEnable()
     {
@@ -59,9 +60,12 @@ public class PlayerAttack : MonoBehaviour
 
         int hitCount = Physics.OverlapSphereNonAlloc(
             transform.position,
-            _stats[StatType.AttackRange],
-            _hitBuffer
+            _stats.GetStatValue(StatType.AttackRange),
+            _hitBuffer,
+            ~0,
+            QueryTriggerInteraction.Ignore
         );
+        _processed.Clear();
         DamageType damageType = _inventory.Equipments[EquipmentSlot.RightArm]?.Data.DamageType ?? DamageType.Physical;
 
         for (int i = 0; i < hitCount; i++)
@@ -70,8 +74,10 @@ public class PlayerAttack : MonoBehaviour
 
             if (_hitBuffer[i].TryGetComponent<IDamageable>(out var damageable))
             {
-                float finalDamage = _stats[StatType.Attack];
-                damageable.TakeDamage(new DamageContext(gameObject, finalDamage, _hitBuffer[i].transform, damageType));
+                if (!_processed.Add(damageable)) continue;
+
+                float finalDamage = _stats.GetStatValue(StatType.Strength);
+                damageable.TakeDamage(new DamageContext(gameObject, finalDamage, _hitBuffer[i].transform));
             }
         }
     }
@@ -98,11 +104,11 @@ public class PlayerAttack : MonoBehaviour
             _input.Player.Enable();
     }
 
-    //private void OnDrawGizmosSelected()
-    //{
-    //    Gizmos.color = new Color(1, 0, 0, 0.8f);
-    //    Gizmos.DrawWireSphere(transform.position, _stats[StatType.AttackRange]);
-    //}
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = new Color(1, 0, 0, 0.8f);
+        Gizmos.DrawWireSphere(transform.position, _stats.GetStatValue(StatType.AttackRange));
+    }
 
     private void OnDestroy()
     {

@@ -5,12 +5,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Equipment", menuName = "Game/Items/Equipment")]
 public class EquipmentSO : SimpleItemSO
 {
-    [SerializeField] private float _attack;
-    [SerializeField] private float _defence;
-    [SerializeField] private float _speed;
-    [SerializeField] private float _health;
-    [SerializeField] private float _regenerate;
-    [SerializeField] private int _durability;
+    [SerializeField] private Dictionary<StatId, float> _stats;
     [SerializeField] private EquipmentSlot _slot;
     [SerializeField] private DamageType _damageType;
 
@@ -24,12 +19,7 @@ public class EquipmentSO : SimpleItemSO
     [Tooltip("Override Controller с клипом атаки для этого оружия. Если не задан, используется анимация по умолчанию (кулаки).")]
     [SerializeField] private AnimatorOverrideController _attackOverride;
 
-    public float Attack => _attack;
-    public float Defence => _defence;
-    public float Speed => _speed;
-    public float Health => _health;
-    public float Regenerate => _regenerate;
-    public int Durability => _durability;
+    public Dictionary<StatId, float> Stats => _stats;
     public EquipmentSlot Slot => _slot;
     public DamageType DamageType => _damageType;
 

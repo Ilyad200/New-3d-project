@@ -2,14 +2,14 @@ using UnityEngine;
 
 public enum DamageType
 {
-    Physical,
-    Fire,
-    Ice,
-    Lightning,
-    Poison,
-    Magic,
-    True,      // Игнорирует броню и резисты
-    Axe, Pickaxe, Shovel // Интсрументы
+    None = 0,
+    Physical = 1,
+    Fire = 2,
+    Ice = 3,
+    Lightning = 4,
+    Poison = 5,
+    Magic = 6,
+    True = 7,      // Игнорирует броню и резисты
 }
 
 public static class DamageTypeExtensions

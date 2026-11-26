@@ -20,7 +20,7 @@ public class DetectionTrigger : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             Debug.Log($"[Trigger] player enter");
-            OnPlayerIn.Invoke(other.transform);
+            OnPlayerIn?.Invoke(other.transform);
         }
     }
 
@@ -28,7 +28,7 @@ public class DetectionTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            OnPlayerOut.Invoke(other.transform);
+            OnPlayerOut?.Invoke(other.transform);
             Debug.Log($"[Trigger] player exit");
         }
         }

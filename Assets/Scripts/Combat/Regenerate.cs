@@ -4,41 +4,36 @@ using UnityEngine;
 
 public class Regenerate : MonoBehaviour
 {
-    private IHealable _healable;
-    private IHealthProvider _healthProvider;
-    private PlayerStats _stats;
-    private bool _isRegenerating = false;
+    [SerializeField] private float interval = 5f;
+
+    private IHealthProvider health;
+    private IHealable healable;
+    private Stat regenStat;
+    private float timer;
 
     private void Awake()
     {
-        _healable = GetComponent<IHealable>();
-        _healthProvider = GetComponent<IHealthProvider>();
-        _stats = GetComponent<PlayerStats>();
+        health = GetComponent<IHealthProvider>();
+        healable = GetComponent<IHealable>();
+        regenStat = GetComponent<EntityStats>().GetStat(StatType.Regeneration);
     }
-    private void OnDisable()
+
+    private void Update()
     {
-        StopRegen();
-    }
-    private IEnumerator Regeneration()
-    {
-        while(_healthProvider.IsAlive)
+        // Мёртвым и полностью здоровым таймер не нужен
+        if (health.CurrentHP <= 0f || health.CurrentHP >= health.MaxHP || regenStat.Value <= 0)
         {
-            yield return new WaitForSeconds(5f);
-            _healable.Heal(new HealContext(gameObject, _stats.Stats[StatType.Regeneration]));
+            timer = 0f;
+            return;
         }
-    }
-    public void StartRegen()
-    {
-        if (_stats.Stats[StatType.Regeneration] <= 0) return;
-        if (!_isRegenerating)
+
+        timer += Time.deltaTime;
+        float step = Mathf.Max(0.01f, interval);   // защита от нуля в инспекторе
+
+        while (timer >= step)
         {
-            StartCoroutine(Regeneration());
-            _isRegenerating = true;
+            timer -= step;
+            healable.Heal(new HealContext(gameObject, regenStat.Value));
         }
-    }
-    public void StopRegen()
-    {
-        StopCoroutine(Regeneration());
-        _isRegenerating = false;
     }
 }

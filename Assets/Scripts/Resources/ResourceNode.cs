@@ -14,7 +14,7 @@ public class ResourceNode : MonoBehaviour, IDamageFilter
         _healthProvider = GetComponent<HealthComponent>();
     }
 
-    public bool CanTakeDamage(DamageContext ctx) => ctx.Type == _requiredType;
+    public bool CanTakeDamage(DamageComponent component) => component.Type == _requiredType;
 
     private void OnEnable() => GetComponent<HealthComponent>().OnDied += OnDied;
     private void OnDisable() => GetComponent<HealthComponent>().OnDied -= OnDied;

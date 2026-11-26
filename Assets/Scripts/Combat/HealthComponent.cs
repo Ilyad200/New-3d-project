@@ -1,22 +1,19 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class HealthComponent : MonoBehaviour, IDamageable, IHealable, IHealthProvider
 {
-    [SerializeField] private float _maxHP = 50f;
     private float _currentHP;
+    private float _lastMaxHP;
     private IDamageFilter _filter;
+    private Stat _maxHPStat;
+    private bool clampDirty;
 
     public float CurrentHP => _currentHP;
-    public float MaxHP { 
-        get => _maxHP;
-        set {
-            if (value <= 0) return;
-            _maxHP = value;
-            if (_currentHP > _maxHP) _currentHP = _maxHP;
-            OnMaxHealthChanged?.Invoke(_currentHP, _maxHP);
-        } }
+    public float MaxHP => _maxHPStat.Value;
     public bool IsAlive => _currentHP > 0;
 
     public event Action<DamageEventArgs> OnDamaged;
@@ -27,19 +24,41 @@ public class HealthComponent : MonoBehaviour, IDamageable, IHealable, IHealthPro
 
     private void Awake()
     {
-        _currentHP = _maxHP;
         _filter = GetComponent<IDamageFilter>();
+        _maxHPStat = GetComponent<IHaveStats>().GetStat(StatType.Health);
     }
+    private void Start()
+    {
+        _currentHP = MaxHP;
+        _lastMaxHP = MaxHP;
+    }
+    private void OnEnable() => _maxHPStat.Changed += OnMaxChanged;
+    private void OnDisable() => _maxHPStat.Changed -= OnMaxChanged;
+    public void OnMaxChanged(Stat stat) => clampDirty = true;
 
+    private void LateUpdate()
+    {
+        if (!clampDirty) return;
+        clampDirty = false;
+
+        if (_lastMaxHP < MaxHP)
+        {
+            _currentHP += MaxHP - _lastMaxHP;
+        }
+
+        _lastMaxHP = MaxHP;
+        _currentHP = Mathf.Min(_currentHP, MaxHP);
+        OnMaxHealthChanged?.Invoke(_currentHP, MaxHP);
+    }
     public void TakeDamage(DamageContext context)
     {
         if (!IsAlive) return;
-        if (_filter != null && !_filter.CanTakeDamage(context)) return;
+        if (_filter != null && !_filter.CanTakeDamage(context.Components[0])) return;
 
         float takenDamage = context.BaseAmount;
         if (context.Target.TryGetComponent<IHaveStats>(out IHaveStats targetStats))
         {
-            takenDamage = Mathf.Max(0, context.BaseAmount - targetStats.Stats[StatType.Defense]);
+            //takenDamage = Mathf.Max(0, context.BaseAmount - targetStats.Stats[StatType.Defense]);
         }
 
         _currentHP = Mathf.Max(_currentHP - takenDamage, 0f);
@@ -47,7 +66,7 @@ public class HealthComponent : MonoBehaviour, IDamageable, IHealable, IHealthPro
         OnDamaged?.Invoke(new DamageEventArgs
         {
             CurrentHP = _currentHP,
-            MaxHP = _maxHP
+            MaxHP = MaxHP
         });
 
         if (_currentHP <= 0f)
@@ -60,17 +79,17 @@ public class HealthComponent : MonoBehaviour, IDamageable, IHealable, IHealthPro
     {
         if (!IsAlive) return;
 
-        _currentHP = Mathf.Min(_currentHP + context.BaseAmount, _maxHP);
+        _currentHP = Mathf.Min(_currentHP + context.BaseAmount, MaxHP);
         OnHealed?.Invoke(new HealEventArgs
         {
             CurrentHP = _currentHP,
-            MaxHP = _maxHP
+            MaxHP = MaxHP
         });
     }
 
     public void Revival(float amount)
     {
         _currentHP = amount;
-        OnRevived?.Invoke(_currentHP, _maxHP);
+        OnRevived?.Invoke(_currentHP, MaxHP);
     }
 }

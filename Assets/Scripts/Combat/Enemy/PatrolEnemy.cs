@@ -23,14 +23,15 @@ public class PatrolEnemy : BaseEnemy
     private DetectionTrigger _trigger;
     private EnemyState _currentState;
 
+    private Coroutine waitCoroutine;
+
     protected override void Awake()
     {
         base.Awake();
         _nextPatrolPoint = transform.position;
-        _trigger = GetComponentInChildren<DetectionTrigger>();
+        _trigger = GetComponent<DetectionTrigger>();
 
         _trigger.OnPlayerIn += Chase;
-        _trigger.OnPlayerOut += Patrol;
     }
     private void OnDisable()
     {
@@ -45,7 +46,7 @@ public class PatrolEnemy : BaseEnemy
         _currentState = EnemyState.Patrol;
         _healthProvider.OnDied += Die;
 
-        _trigger.Collider.radius = Stats[StatType.DetectionRange];
+        _trigger.Collider.radius = _stats.GetStatValue(StatType.DetectionRange);
     }
 
     private void FixedUpdate()
@@ -55,12 +56,12 @@ public class PatrolEnemy : BaseEnemy
             case EnemyState.Patrol:
                 if (Vector3.Distance(transform.position, _nextPatrolPoint) <= _agent.stoppingDistance + _threshold || _agent.pathStatus == NavMeshPathStatus.PathInvalid)
                 {
-                    StartCoroutine(Wait());
+                    waitCoroutine = StartCoroutine(Wait());
                 }
                 _agent.SetDestination(_nextPatrolPoint);
                 break;
             case EnemyState.Chase:
-                if (Vector3.Distance(transform.position, _target.position) <= Stats[StatType.AttackRange])
+                if (Vector3.Distance(transform.position, _target.position) <= _stats.GetStatValue(StatType.AttackRange))
                 {
                     _agent.ResetPath();
                     Attack();
@@ -70,6 +71,10 @@ public class PatrolEnemy : BaseEnemy
                     _agent.SetDestination(_target != null ? _target.position : _nextPatrolPoint); 
                 }
                 break;
+        }
+        if (_target != null && Vector3.Distance(transform.position, _target.position) > _stats.GetStatValue(StatType.DetectionRange) + _threshold)
+        {
+            Patrol();
         }
     }
     private IEnumerator Wait()
@@ -85,15 +90,12 @@ public class PatrolEnemy : BaseEnemy
     }
     private void Chase(Transform target)
     {
-        Debug.Log($"[Enemy] player enter");
-        StopCoroutine(Wait());
+        StopCoroutine(waitCoroutine);
         _target = target;
         _currentState = EnemyState.Chase;
     }
-    private void Patrol(Transform target)
+    private void Patrol()
     {
-        if (_target != target) return;
-        Debug.Log($"[Enemy] player exit");
         _target = null;
         _currentState = EnemyState.Patrol;
     }
@@ -103,13 +105,13 @@ public class PatrolEnemy : BaseEnemy
 
         _canAttack = false;
         var health = _target.GetComponent<IDamageable>();
-        health?.TakeDamage(new DamageContext(gameObject, Stats[StatType.Attack], _target));
+        health?.TakeDamage(new DamageContext(gameObject, _stats.GetStatValue(StatType.Strength), _target));
 
         StartCoroutine(AttckReload());
     }
     private IEnumerator AttckReload()
     {
-        yield return new WaitForSeconds(Stats[StatType.AttackSpeed]);
+        yield return new WaitForSeconds(_stats.GetStatValue(StatType.AttackSpeed));
         _canAttack = true;
     }
     private void Die(DamageContext context)
@@ -120,7 +122,7 @@ public class PatrolEnemy : BaseEnemy
 
         StopAllCoroutines();
 
-        var killerSkills = context.Source.GetComponent<IHaveSkills>();
+        //var killerSkills = context.Source.GetComponent<IHaveSkills>();
 
         _spawner.OnEnemyDied(this);
     }
@@ -128,7 +130,6 @@ public class PatrolEnemy : BaseEnemy
     private void OnDestroy()
     {
         _trigger.OnPlayerIn -= Chase;
-        _trigger.OnPlayerOut -= Patrol;
     }
 
     private void OnDrawGizmos()
@@ -136,7 +137,7 @@ public class PatrolEnemy : BaseEnemy
         if (_spawner == null) return;
 
         Gizmos.color = Color.orange;
-        Gizmos.DrawWireSphere(transform.position, Stats[StatType.DetectionRange]);
+        Gizmos.DrawWireSphere(transform.position, _stats.GetStatValue(StatType.DetectionRange));
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(_spawner.transform.position, _patrolRadius);

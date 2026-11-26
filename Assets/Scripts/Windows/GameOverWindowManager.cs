@@ -58,7 +58,6 @@ public class GameOverWindowManager : MonoBehaviour
     private void GameMenu(InputAction.CallbackContext context)
     {
         if (_isPlayerDead) return;
-        Debug.Log("[GameOver] Esc is pressed");
         _isMenuOpen = !_isMenuOpen;
         if (_isMenuOpen)
         {

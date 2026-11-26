@@ -3,39 +3,31 @@ using UnityEngine;
 
 public class PlayerReset : MonoBehaviour
 {
-    [SerializeField] private Stats _stats;
     private IHealthProvider _healthProvider;
-    private PlayerStats _playerStats;
+    private IHaveStats _playerStats;
     private Inventory _inventory;
-    private Dictionary<StatType, float> _statsDict;
 
     private void Start()
     {
-        _playerStats = GetComponent<PlayerStats>();
+        _playerStats = GetComponent<IHaveStats>();
         _healthProvider = GetComponent<IHealthProvider>();
         _inventory = GetComponentInChildren<Inventory>();
     }
     public void ResetPlayer()
     {
-        transform.position = new Vector3(0, 1, 0);
+        CharacterController controller = GetComponent<CharacterController>();
 
-        _statsDict = new Dictionary<StatType, float>() {
-            { StatType.Attack, _stats.Attack },
-            { StatType.Defense, _stats.Defense },
-            { StatType.Speed, _stats.Speed },
-            { StatType.Health, _stats.HP },
-            { StatType.AttackRange, _stats.AttackRange },
-            { StatType.AttackSpeed, _stats.AttackSpeed },
-            { StatType.Regeneration, _stats.Regeneration },
-        };
-
-        foreach (var stat in _statsDict)
+        if (controller != null)
         {
-            _playerStats.SetStatType(stat.Key, stat.Value);
+            controller.enabled = false; // Отключаем, чтобы не перезаписал позицию
+            transform.position = new Vector3(0, 1, 0);
+            controller.enabled = true;
         }
-        _inventory.ClearInventory();
-        if (TryGetComponent<PlayerEquipmentVisuals>(out var visuals)) visuals.ClearAll();
+        else
+        {
+            transform.position = new Vector3(0, 1, 0);
+        }
 
-        _healthProvider.Revival(_statsDict[StatType.Health]);
+        _healthProvider.Revival(_playerStats.GetStatValue(StatType.Health));
     }
 }

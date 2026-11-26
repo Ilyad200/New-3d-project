@@ -28,17 +28,17 @@ public class StatsWindow : MonoBehaviour
     {
         _isWindowOpen = !_isWindowOpen;
         GameManager.StatWindowUpdate(_isWindowOpen);
-        var playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerStats>();
+        var playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<IHaveStats>();
 
         gameObject.SetActive(_isWindowOpen);
 
         if (_statsTexts == null || !_isWindowOpen) return;
 
-        _statsTexts[0].text = playerStats.Stats[StatType.Attack].ToString();
-        _statsTexts[1].text = playerStats.Stats[StatType.Defense].ToString();
-        _statsTexts[2].text = playerStats.Stats[StatType.Health].ToString();
-        _statsTexts[3].text = playerStats.Stats[StatType.Speed].ToString();
-        _statsTexts[4].text = playerStats.Stats[StatType.Regeneration].ToString();
+        _statsTexts[0].text = playerStats.GetStatValue(StatType.Strength).ToString();
+        _statsTexts[1].text = playerStats.GetStatValue(StatType.FlatResistance).ToString();
+        _statsTexts[2].text = playerStats.GetStatValue(StatType.Health).ToString();
+        _statsTexts[3].text = playerStats.GetStatValue(StatType.Speed).ToString();
+        _statsTexts[4].text = playerStats.GetStatValue(StatType.Regeneration).ToString();
     }
     private void ChangeWindowStatus(bool isClose)
     {

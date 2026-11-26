@@ -17,14 +17,15 @@ MonoBehaviour:
   _description: 
   _icon: {fileID: 21300000, guid: 172774604c1bee84185a69041576525b, type: 3}
   _isStackable: 0
-  _attack: 15
-  _defence: 0
-  _speed: 0
-  _health: 0
-  _regenerate: 0
-  _durability: 100
+  _stats:
+  - key:
+      StatType: 0
+      DamageType: 0
+    value: 15
   _slot: 1
+  _damageType: 0
   _heldPrefab: {fileID: 919132149155446097, guid: 545048be6c9faeb4b8e38f2434debed3, type: 3}
   _heldPosition: {x: 0, y: 0, z: 0}
   _heldEulerAngles: {x: 0, y: 0, z: 0}
   _heldScale: {x: 1, y: 1, z: 1}
+  _attackOverride: {fileID: 0}

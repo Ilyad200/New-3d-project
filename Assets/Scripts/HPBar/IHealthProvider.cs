@@ -3,7 +3,7 @@ using UnityEngine;
 
 public interface IHealthProvider
 {
-    float MaxHP { get; set; }
+    float MaxHP { get; }
     float CurrentHP { get; }
     bool IsAlive { get; }
     public event Action<DamageEventArgs> OnDamaged;

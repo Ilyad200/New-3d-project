@@ -1,9 +1,9 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public interface IHaveStats
 {
-    Dictionary<StatType, float> Stats { get; }
-
-    public void SetStatType(StatType type, float amount);
+    Stat GetStat(StatType type, DamageType damageType = DamageType.None);
+    float GetStatValue(StatType type, DamageType damageType = DamageType.None);
 }
