@@ -24,7 +24,7 @@ public class EntityStats : MonoBehaviour, IHaveStats
             var stat = GetStat(kvp.Key.StatType, kvp.Key.DamageType);
             stat.RemoveAllFromSource(baseStats);   // повторный вызов не дублирует
             stat.AddModifier(Guid.NewGuid(), ModifierType.Flat, kvp.Value, baseStats);
-        }
+    }
     }
     public Stat GetStat(StatType type, DamageType damageType = DamageType.None)
     {
@@ -34,7 +34,7 @@ public class EntityStats : MonoBehaviour, IHaveStats
         return stat;
     }
     public float GetStatValue(StatType type, DamageType damageType = DamageType.None)
-    {
+        {
         return stats.TryGetValue(new StatId(type, damageType), out var s) ? s.Value : 0f;
     }
 }

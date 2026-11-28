@@ -12,6 +12,8 @@ public class HealthComponent : MonoBehaviour, IDamageable, IHealable, IHealthPro
     private Stat _maxHPStat;
     private bool clampDirty;
 
+    public event Action<float, float> OnHealthChanged; //currentHP, maxHP
+
     public float CurrentHP => _currentHP;
     public float MaxHP => _maxHPStat.Value;
     public bool IsAlive => _currentHP > 0;
@@ -53,9 +55,15 @@ public class HealthComponent : MonoBehaviour, IDamageable, IHealable, IHealthPro
     public void TakeDamage(DamageContext context)
     {
         if (!IsAlive) return;
-        if (_filter != null && !_filter.CanTakeDamage(context.Components[0])) return;
+        //if (_filter != null && !_filter.CanTakeDamage(context)) return;
 
-        float takenDamage = context.BaseAmount;
+        float takenDamage = 0;
+        Debug.Log($"[HealthComponent] TakeDamage");
+        foreach (var component in context.Components)
+        {
+            takenDamage += component.Amount;
+        }
+        Debug.Log($"[HealthComponent] {takenDamage}");
         if (context.Target.TryGetComponent<IHaveStats>(out IHaveStats targetStats))
         {
             //takenDamage = Mathf.Max(0, context.BaseAmount - targetStats.Stats[StatType.Defense]);

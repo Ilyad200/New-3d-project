@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public enum DamageType
+public enum DamageType2
 {
     None = 0,
     Physical = 1,

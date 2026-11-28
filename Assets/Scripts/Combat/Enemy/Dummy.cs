@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class Dummy : MonoBehaviour, ICombatSource
+public class Dummy : MonoBehaviour
 {
     public GameObject Owner { get; }
     public Faction Faction { get; }
@@ -32,7 +32,7 @@ public class Dummy : MonoBehaviour, ICombatSource
 
     private void Die(DamageContext context)
     {
-        healable.Heal(new HealContext(gameObject, healable.MaxHP));
+        healable.Heal(new HealContext(gameObject, healable.HealthProvider.MaxHP));
     }
 
     public float GetFlatBonus(DamageType type) => 0f;

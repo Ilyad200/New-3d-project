@@ -4,19 +4,17 @@ using UnityEngine;
 public class DamageContext
 {
     public GameObject Attacker { get; private set; }
-    public Transform Target { get; private set; }
+    public GameObject Target { get; private set; }
     public float BaseAmount { get; private set; }
-    public DamageModifiers Modifiers { get; private set; }
+    public DamageModifier Modifiers { get; private set; }
 
     private List<DamageComponent> _components = new List<DamageComponent>();
     public IReadOnlyList<DamageComponent> Components => _components;
 
-    public DamageContext(GameObject attacker, float amount, Transform target, DamageModifiers? modifiers = null)
+    public DamageContext(GameObject attacker, GameObject target)
     {
         Attacker = attacker;
-        BaseAmount = amount;
         Target = target;
-        Modifiers = modifiers ?? default;
     }
 
     // Метод для добавления частей урона
@@ -26,8 +24,8 @@ public class DamageContext
     }
 
     // Удобный метод для быстрого добавления
-    public void AddDamage(float amount, DamageType type, bool isCrit = false, DamageModifiers? modifiers = null, string sourceTag = null)
+    public void AddComponent(GameObject source, float amount, DamageType type, bool isCrit = false, DamageModifier? modifiers = null, DamageTags[] damageTags = null)
     {
-        _components.Add(new DamageComponent(amount, type, isCrit, modifiers, sourceTag));
+        _components.Add(new DamageComponent(source, amount, type, isCrit, modifiers, damageTags));
     }
 }

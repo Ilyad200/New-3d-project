@@ -106,7 +106,9 @@ public class PatrolEnemy : BaseEnemy
 
         _canAttack = false;
         var health = _target.GetComponent<IDamageable>();
-        health?.TakeDamage(new DamageContext(gameObject, _stats.GetStatValue(StatType.Strength), _target));
+        var context = new DamageContext(gameObject, _target.GameObject());
+        context.AddComponent(gameObject, _stats.GetStatValue(StatType.Strength), DamageType.Physical);
+        health?.TakeDamage(context);
 
         StartCoroutine(AttckReload());
     }

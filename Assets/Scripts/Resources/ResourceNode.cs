@@ -1,11 +1,12 @@
 using UnityEngine;
 using System.Collections;
 using static Unity.VisualScripting.Dependencies.Sqlite.SQLite3;
+using System.Linq;
 
 [RequireComponent(typeof(HealthComponent))]
 public class ResourceNode : MonoBehaviour, IDamageFilter
 {
-    [SerializeField] private DamageType _requiredType = DamageType.Physical;
+    [SerializeField] private DamageTags _requiredType = DamageTags.Resource_Pickaxe;
     [SerializeField] private float _respawnDelay;
 
     protected IHealthProvider _healthProvider;
@@ -14,7 +15,7 @@ public class ResourceNode : MonoBehaviour, IDamageFilter
         _healthProvider = GetComponent<HealthComponent>();
     }
 
-    public bool CanTakeDamage(DamageComponent component) => component.Type == _requiredType;
+    public bool CanTakeDamage(DamageComponent component) => component.DamageTags.Contains(_requiredType);
 
     private void OnEnable() => GetComponent<HealthComponent>().OnDied += OnDied;
     private void OnDisable() => GetComponent<HealthComponent>().OnDied -= OnDied;

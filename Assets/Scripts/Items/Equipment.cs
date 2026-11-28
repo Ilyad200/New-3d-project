@@ -15,32 +15,28 @@ public class Equipment : SimpleItem, IEquipment
     {
         _equipmentData = equipmentSO;
         _isEquipped = false;
-        //_stats = new Dictionary<StatType, float>()
-        //{
-        //    { StatType.Attack, equipmentSO.Attack },
-        //    { StatType.Defense, equipmentSO.Defence },
-        //    { StatType.Speed, equipmentSO.Speed },
-        //    { StatType.Health, equipmentSO.Health },
-        //    { StatType.Durability, equipmentSO.Durability },
-        //    { StatType.Regeneration, equipmentSO.Regenerate }
-        //};
     }
 
-    public void Equip()
+    public void Equip(ICombatSource owner)
     {
         _isEquipped = true;
 
-        var playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<IHaveStats>();
+        var ownerStat = owner.GetComponent<IHaveStats>();
+        if (ownerStat == null) return;
+
         foreach (var stat in _equipmentData.Stats)
         {
-            playerStats.GetStat(stat.Key.StatType, stat.Key.DamageType).AddModifier(Guid.NewGuid(), ModifierType.Flat, stat.Value, this);            
+            ownerStat.GetStat(stat.Key.StatType, stat.Key.DamageType).AddModifier(Guid.NewGuid(), ModifierType.Flat, stat.Value, this);            
         }
     }
-    public void Unequip()
+
+    public void Unequip(ICombatSource owner)
     {
         _isEquipped = false;
 
-        var playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<IHaveStats>();
+        var ownerStat = owner.GetComponent<IHaveStats>();
+        if (ownerStat == null) return;
+
         foreach (var stat in _equipmentData.Stats)
         {
             playerStats.GetStat(stat.Key.StatType, stat.Key.DamageType).RemoveAllFromSource(this);

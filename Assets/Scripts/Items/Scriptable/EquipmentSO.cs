@@ -8,6 +8,7 @@ public class EquipmentSO : SimpleItemSO
     [SerializeField] private Dictionary<StatId, float> _stats;
     [SerializeField] private EquipmentSlot _slot;
     [SerializeField] private DamageType _damageType;
+    //public CombatModifiers modifiers;
 
     [Header("Модель в руке / на теле")]
     [SerializeField] private GameObject _heldPrefab;

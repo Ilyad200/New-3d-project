@@ -4,9 +4,11 @@ public enum Faction { Player, Enemy, Neutral, Ally, Environment }
 
 public interface ICombatSource
 {
-    GameObject Owner { get; }
     Faction Faction { get; }
-    int Level { get; }
+    IHealthProvider HealthProvider { get; }
+    IHaveStats Stats { get; }
+    CombatProfile Profile { get; }
+
     //bool IsValid { get; }
 
     //// Базовые модификаторы (могут быть переопределены в наследниках)

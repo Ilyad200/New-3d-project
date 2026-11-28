@@ -70,14 +70,17 @@ public class PlayerAttack : MonoBehaviour
 
         for (int i = 0; i < hitCount; i++)
         {
-            if (_hitBuffer[i].transform == transform) continue;
+            Collider col = _hitBuffer[i];
+            if (col.transform.IsChildOf(transform)) continue;
 
-            if (_hitBuffer[i].TryGetComponent<IDamageable>(out var damageable))
+            if (col.TryGetComponent<IDamageable>(out var damageable))
             {
-                if (!_processed.Add(damageable)) continue;
+                if (!_processed.Add(damageable)) continue; // уже обработали этого получателя
 
-                float finalDamage = _stats.GetStatValue(StatType.Strength);
-                damageable.TakeDamage(new DamageContext(gameObject, finalDamage, _hitBuffer[i].transform));
+                DamageContext context = new DamageContext(gameObject, col.gameObject);
+                DamageType damageType = _inventory.Equipments[EquipmentSlot.RightArm]?.Data.DamageType ?? DamageType.Physical;
+                context.AddComponent(gameObject, _inventory.Equipments[EquipmentSlot.RightArm]?.Data.Stats[new StatId(StatType.Strength)] ?? _stats.Get(StatType.Damage), damageType);
+                damageable.TakeDamage(context);
             }
         }
     }
@@ -115,5 +118,11 @@ public class PlayerAttack : MonoBehaviour
         GameManager.OnGamePaused -= GameStateChanged;
         GameManager.OnInventoryUpdate -= GameStateChanged;
         GameManager.OnPlayerLiveStatusUpdate -= GameStateChanged;
+    }
+    private void OnDrawGizmos()
+    {
+
+        Gizmos.color = Color.orange;
+        Gizmos.DrawWireSphere(transform.position, _stats.Get(StatType.AttackRange));
     }
 }
