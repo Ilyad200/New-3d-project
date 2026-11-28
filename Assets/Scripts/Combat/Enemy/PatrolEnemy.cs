@@ -56,7 +56,7 @@ public class PatrolEnemy : BaseEnemy
             case EnemyState.Patrol:
                 if (Vector3.Distance(transform.position, _nextPatrolPoint) <= _agent.stoppingDistance + _threshold || _agent.pathStatus == NavMeshPathStatus.PathInvalid)
                 {
-                    waitCoroutine = StartCoroutine(Wait());
+                    waitCoroutine ??= StartCoroutine(Wait());
                 }
                 _agent.SetDestination(_nextPatrolPoint);
                 break;
@@ -86,11 +86,12 @@ public class PatrolEnemy : BaseEnemy
     {
         Vector2 offset = Random.insideUnitCircle * _patrolRadius;
         _nextPatrolPoint = (_spawner != null ? _spawner.transform.position : transform.position) +
-                                new Vector3(offset.x, _spawner != null ? _spawner.transform.position.y : transform.position.y, offset.y);
+                                new Vector3(offset.x, 0, offset.y);
     }
     private void Chase(Transform target)
     {
-        StopCoroutine(waitCoroutine);
+        if (waitCoroutine != null)
+            StopCoroutine(waitCoroutine);
         _target = target;
         _currentState = EnemyState.Chase;
     }

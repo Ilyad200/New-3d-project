@@ -5,7 +5,7 @@ using static Unity.VisualScripting.Dependencies.Sqlite.SQLite3;
 [RequireComponent(typeof(HealthComponent))]
 public class ResourceNode : MonoBehaviour, IDamageFilter
 {
-    [SerializeField] private DamageType _requiredType = DamageType.Pickaxe;
+    [SerializeField] private DamageType _requiredType = DamageType.Physical;
     [SerializeField] private float _respawnDelay;
 
     protected IHealthProvider _healthProvider;
